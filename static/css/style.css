@@ -2,9 +2,24 @@ body{
   font-family: "Netflix";
 }
 
+.image-container {
+  position: relative;
+}
+
+.overlay {
+  position: absolute;
+  bottom: 25;
+  left: 25%;
+  right: 25;
+  top: 25%;
+  color: white;
+
+}
+
 @font-face {
   font-family: "Netflix";
   src: url("../fonts/NetflixFont.ttf") format("truetype");
   font-style: normal;
   font-weight: normal;
 }
+
