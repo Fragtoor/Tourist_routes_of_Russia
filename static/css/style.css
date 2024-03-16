@@ -1,0 +1,10 @@
+body{
+  font-family: "Netflix";
+}
+
+@font-face {
+  font-family: "Netflix";
+  src: url("../fonts/NetflixFont.ttf") format("truetype");
+  font-style: normal;
+  font-weight: normal;
+}
