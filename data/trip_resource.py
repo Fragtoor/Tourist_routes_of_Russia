@@ -34,10 +34,11 @@ class TripsListResources(Resource):
         session = db_session.create_session()
         trips = session.query(Trip).all()
         return jsonify({'trips': [item.to_dict(
-            only=('id', 'title', 'region')) for item in trips]})
+            only=('id', 'title', 'region', 'image')) for item in trips]})
 
     def post(self):
-        args = parser.args()
+        print('ok')
+        args = parser.parse_args()
         session = db_session.create_session()
         trip = Trip(
             title=args['title'],
