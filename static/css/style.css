@@ -1,5 +1,7 @@
 body{
   font-family: "Netflix";
+  position: relative;
+
 }
 
 .image-container {
@@ -14,6 +16,29 @@ body{
   top: 25%;
   color: white;
 
+}
+
+.map {
+    position: absolute;
+    left: 0%;
+}
+
+svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+}
+
+.part {
+opacity: .0
+}
+
+.part:hover {
+    transition: opacity .3s ease;
+    opacity: .5;
+    cursor: pointer;
 }
 
 @font-face {
