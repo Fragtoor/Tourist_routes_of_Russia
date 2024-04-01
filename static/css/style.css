@@ -1,7 +1,7 @@
 body{
-  font-family: "Netflix";
-  position: relative;
-
+    margin: 0;
+    padding: 0;
+    font-family: "Netflix";
 }
 
 .image-container {
@@ -9,36 +9,56 @@ body{
 }
 
 .overlay {
+
   position: absolute;
   bottom: 25;
   left: 25%;
   right: 25;
   top: 25%;
   color: white;
-
 }
 
 .map {
-    position: absolute;
-    left: 0%;
+    position: relative;
+    text-align: center;
+    margin-right: 5px;
+}
+
+.form-select {
+    width: 300px; /* Установите желаемую ширину формы */
+    margin: 0 auto; /* Центрируем форму по горизонтали */
+    padding: 20px; /* Внутренний отступ */
+    border: 1px solid #ccc; /* Граница формы */
+}
+
+.d-flex {
+    width: 400px;
 }
 
 svg {
     position: absolute;
     top: 0;
     left: 0;
-    display: block;
     width: 100%;
+    height: 100%;
 }
 
 .part {
-opacity: .0
+    opacity: .0
 }
 
 .part:hover {
     transition: opacity .3s ease;
     opacity: .5;
     cursor: pointer;
+}
+
+.rounded-border {
+    width: 700px;
+    margin: 0 auto;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow:ellipsis;
 }
 
 @font-face {

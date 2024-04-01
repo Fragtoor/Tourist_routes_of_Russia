@@ -18,7 +18,7 @@ class TripResource(Resource):
         session = db_session.create_session()
         trip = session.query(Trip).get(trip_id)
         return jsonify({'trip':
-                            trip.to_dict(only=('title', 'region', 'description', 'image'))})
+                            trip.to_dict(only=('title', 'district', 'description', 'settlements', 'image', 'des_settlements', 'route'))})
 
     def delete(self, trip_id):
         abort_if_trip_not_found(trip_id)
@@ -34,7 +34,7 @@ class TripsListResources(Resource):
         session = db_session.create_session()
         trips = session.query(Trip).all()
         return jsonify({'trips': [item.to_dict(
-            only=('id', 'title', 'region', 'image')) for item in trips]})
+            only=('id', 'title', 'district', 'image')) for item in trips]})
 
     def post(self):
         print('ok')
@@ -42,7 +42,7 @@ class TripsListResources(Resource):
         session = db_session.create_session()
         trip = Trip(
             title=args['title'],
-            region=args['region'],
+            district=args['district'],
             description=args['description'],
             image=args['image']
         )

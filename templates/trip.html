@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block content %}
+<img class="img-fluid" src="{{url_for('static', filename=trip['image'])}}" style="height:60vh; width:100vw;">
+<div class="overlay">
+    <h1 align="center">{{trip["title"]}}</h1>
+</div>
+{% endblock %}

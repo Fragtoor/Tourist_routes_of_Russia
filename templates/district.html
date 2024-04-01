@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<img class="img-fluid" src="{{url_for('static', filename=district.image)}}" style="height:60vh; width:100vw;">
+<div class="overlay">
+    <h1 align="center">{{district.name}}</h1>
+</div>
+<br><br>
+<h1 align="center">Популярные маршруты в <strong>{{district.name}}</strong></h1>
+<br>
+{% for trip in trips %}
+<a href="/districts/{{district.name}}/trips/{{trip[0]}}">
+<div class="rounded-border" align="center">
+    <div style="position:absolute;color:white;">
+        <h3 style="padding-left:50px;padding-top:50px;font-size:55px;">{{trip[1]}}</h3>
+    </div>
+    <img style="border-radius: 40px; margin:0;" width="700px" src="{{url_for('static', filename=trip[4])}}">
+</div>
+</a>
+{% if not loop.last %}
+<br>
+{% endif %}
+{% endfor %}
+{% endblock %}
