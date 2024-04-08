@@ -4,16 +4,17 @@ body{
     font-family: "Netflix";
 }
 
-.image-container {
-  position: relative;
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .overlay {
-
   position: absolute;
-  bottom: 25;
+  bottom: 25%;
   left: 25%;
-  right: 25;
+  right: 25%;
   top: 25%;
   color: white;
 }
@@ -29,10 +30,6 @@ body{
     margin: 0 auto; /* Центрируем форму по горизонтали */
     padding: 20px; /* Внутренний отступ */
     border: 1px solid #ccc; /* Граница формы */
-}
-
-.d-flex {
-    width: 400px;
 }
 
 svg {
@@ -61,10 +58,59 @@ svg {
     text-overflow:ellipsis;
 }
 
+.border_description {
+    margin: 0 auto;
+    width: 900px;
+    font-size: 30px;
+    border: 2px solid gray;
+    border-radius: 20px;
+    padding: 20px;
+}
+
+.city {
+        display: inline-block;
+        padding: 20px;
+        border: 2px solid #333;
+        border-radius: 20px;
+        margin: 10px;
+        position: relative;
+   }
+
+.matrix {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+}
+.outline-3 {
+    width: 32%; /* Ширина слоя */
+    max-width: 32%; /* Максимальная Ширина слоя */
+    min-width: 370px;/* Минимальная ширина слоя */
+	/* float: left;  Выравнивание блока слева */
+	background: #E6EEDE; /* Цвет фона */
+	box-shadow: 7px 7px 10px rgba(0,0,0,0.6), /* Наружняя тень */
+	            0 5px 10px rgba(0, 0, 0, 0.6) inset, /* Наружняя вертикальная тень */
+				0 0 40px rgba(0, 0, 0, 0.5) inset; /* Внутренняя тень */
+	border: 1px solid #000000; /* Рамка */
+	border-radius: 0px 0px 10px 10px;
+    padding: 0px 5px 0px 5px; /* Отступы */
+
+  text-align: center; /* Выравнивание содержимого по-центру */
+}
+.city::before{
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    height: 2px;
+    width: 28px;
+    background-color: #333;
+}
+
 @font-face {
   font-family: "Netflix";
   src: url("../fonts/NetflixFont.ttf") format("truetype");
   font-style: normal;
   font-weight: normal;
 }
-

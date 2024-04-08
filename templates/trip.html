@@ -1,7 +1,35 @@
 {% extends "base.html" %}
 {% block content %}
+<a href="/districts/{{district_id}}"><button style="width:150px;height:50px;position:absolute;top:10px;font-size:20px;left:10px;" type="button" class="btn btn-outline-secondary">← Назад</button></a>
+<br>
 <img class="img-fluid" src="{{url_for('static', filename=trip['image'])}}" style="height:60vh; width:100vw;">
 <div class="overlay">
     <h1 align="center">{{trip["title"]}}</h1>
 </div>
+<br>
+<br>
+<h2 align="center">Описание</h2>
+<div align="center" class="border_description">
+    <p>{{trip["description"]}}</p>
+</div>
+{% for des in descriptions %}
+{% if loop.index % 2 == 0 %}
+<div style="display:flex;">
+    <img width="500" src="{{url_for('static', filename=des['image'])}}">
+    <p>{{des['description']}}</p>
+</div>
+{% else %}
+<div style="display:flex;">
+    <p>{{des['description']}}</p>
+    <img width="500" src="{{url_for('static', filename=des['image'])}}">
+</div>
+{% endif %}
+{% endfor %}
+
+<br>
+<h1 align="center">Маршрут</h1>
+{% for settlement in trip['settlements'] %}
+<div class="city">{{settlement}}</div>
+{% endfor %}
+<img width="500" src="{{url_for('static', filename=trip['route'])}}">
 {% endblock %}

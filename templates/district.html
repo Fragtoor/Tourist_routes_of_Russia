@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
+<a href="/"><button style="width:150px;height:50px;position:absolute;top:10px;font-size:20px;left:10px;" type="button" class="btn btn-outline-secondary">← На Главную</button></a>
+<br>
 <img class="img-fluid" src="{{url_for('static', filename=district.image)}}" style="height:60vh; width:100vw;">
 <div class="overlay">
     <h1 align="center">{{district.name}}</h1>
@@ -7,17 +9,24 @@
 <br><br>
 <h1 align="center">Популярные маршруты в <strong>{{district.name}}</strong></h1>
 <br>
+
+<div class="row row-cols-1 row-cols-md-2 g-4">
 {% for trip in trips %}
-<a href="/districts/{{district.name}}/trips/{{trip[0]}}">
-<div class="rounded-border" align="center">
-    <div style="position:absolute;color:white;">
-        <h3 style="padding-left:50px;padding-top:50px;font-size:55px;">{{trip[1]}}</h3>
+
+    <div style="width:35%;margin-left:10%;">
+        <a href="/districts/{{district.id}}/trips/{{trip[0]}}" style="text-decoration: none;">
+        <div class="col">
+            <div class="card">
+              <img src="{{url_for('static', filename=trip[4])}}" class="card-img-top" alt="...">
+              <div class="card-body">
+                <h2 class="card-title">{{trip[1]}}</h2>
+                <p style="display: -webkit-box;-webkit-line-clamp: 3;-webkit-box-orient: vertical;overflow: hidden;text-overflow: ellipsis;" class="card-text">{{trip[2]}}</p>
+              </div>
+            </div>
+        </div>
+        </a>
     </div>
-    <img style="border-radius: 40px; margin:0;" width="700px" src="{{url_for('static', filename=trip[4])}}">
-</div>
-</a>
-{% if not loop.last %}
-<br>
-{% endif %}
+
 {% endfor %}
+</div>
 {% endblock %}
