@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+
+<a href="/districts/{{district_id}}/trips/{{trip_id}}"><button style="width:150px;height:50px;position:absolute;top:10px;font-size:20px;left:10px;" type="button" class="btn btn-outline-secondary">← Назад</button></a>
+<br>
+<h1 align="center">Отзывы, о поездке <strong>{{trip_title}}</strong> в регионе <strong>{{district_name}}</strong></h1>
+
+<br>
+<div style="margin-left:150px;margin-right:150px;" align="center">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for review in reviews %}
+        <div class="col">
+            <div class="card">
+                <h5 class="card-header">{{review['title']}}</h5>
+              <div class="card-body">
+                  {% if current_user.id == review['user_id'] %}
+                        <h5 style="color:red;" class="card-title">
+                            {{review['user_name']}}
+                            {% if review['like'] == 'bad' %}
+                                <span class="badge text-bg-danger">Не рекомендует</span>
+                            {% elif review['like'] == 'good' %}
+                                <span class="badge text-bg-warning">Неплохо</span>
+                            {% else %}
+                                <span class="badge text-bg-success">Рекомендует</span>
+                            {% endif %}
+                        </h5>
+                  {% else %}
+                    <h5 class="card-title">
+                            {{review['user_name']}}
+                            {% if review['like'] == 'bad' %}
+                                <span class="badge text-bg-danger">Не рекомендует</span>
+                            {% elif review['like'] == 'good' %}
+                                <span class="badge text-bg-warning">Неплохо</span>
+                            {% else %}
+                                <span class="badge text-bg-success">Рекомендует</span>
+                            {% endif %}
+                        </h5>
+                  {% endif %}
+                <p class="card-text">{{review['text']}}</p>
+              </div>
+              <div class="card-footer text-body-secondary">
+                  {{review['date']}}
+              </div>
+            </div>
+        </div>
+        {% endfor%}
+    </div>
+</div>
+{% endblock %}
