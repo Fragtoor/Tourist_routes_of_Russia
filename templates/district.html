@@ -12,16 +12,16 @@
         <a href="/register"><button style="font-size:20px;" type="button" class="btn btn-outline-secondary">Зарегистрироваться</button></a>
     </div>
 {% endif %}
-<a href="/"><button style="width:150px;height:50px;position:absolute;top:10px;font-size:20px;left:10px;" type="button" class="btn btn-outline-secondary">← На Главную</button></a>
+<a href="/"><button style="position:absolute;top:10px;font-size:20px;left:10px;" type="button" class="btn btn-outline-secondary">← На Главную</button></a>
 <br>
 <div class="image_cap">
     <img class="img-fluid" src="{{url_for('static', filename=district.image)}}" style="height:60vh; width:100vw;">
-    <div class="overlay">
-        <h1 style="font-size: 2em;">{{district.name}}</h1>
+    <div class="overlay_district">
+        <h1 style="font-size: 50px;"><strong>{{district.name}}</strong></h1>
     </div>
 </div>
 <br><br>
-<h1 align="center">Популярные маршруты в <strong>{{district.name}}</strong></h1>
+<h1 style="" align="center"><strong>Популярные маршруты</strong></h1>
 <br>
 
 <div class="row row-cols-1 row-cols-md-2 g-4">
@@ -33,9 +33,9 @@
               <img src="{{url_for('static', filename=trip['image'])}}" class="card-img-top" alt="...">
               <div class="card-body">
                 {% if trip['fame'] == 'great' %}
-                    <h3 class="card-title">{{trip['title']}} <span style="font-size:20px;font-family:Times New Roman;" class="badge text-bg-success">Популярно</span></h3>
+                  <h3 class="card-title"><strong>{{trip['title']}}</strong> <span style="font-size:20px;font-family:Times New Roman;" class="badge text-bg-success">Популярно</span></h3>
                 {% else %}
-                  <h2 class="card-title">{{trip['title']}}</h2>
+                  <h2 class="card-title"><strong>{{trip['title']}}</strong></h2>
                 {% endif %}
                 <p style="display: -webkit-box;-webkit-line-clamp: 3;-webkit-box-orient: vertical;overflow: hidden;text-overflow: ellipsis;" class="card-text">{{trip['description']}}</p>
               </div>

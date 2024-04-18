@@ -22,8 +22,8 @@
           <div class="image_cap">
             <img style="height: 60vh; width: 100vw" src="{{url_for('static', filename=trip['image'])}}" class="img-thumbnail" alt="...">
             <div class="overlay">
-              <h3 style="font-size:2em;">{{trip['title']}}</h3>
-              <h4 style="font-size:1.7em;">{{trip['district_name']}}</h4>
+              <h3 style="font-size:40px;"><strong>"{{trip['title']}}"</strong></h3>
+              <h4 style="font-size:25px;">{{trip['district_name']}}</h4>
             </div>
           </div>
         </div>
@@ -34,8 +34,8 @@
           <div class="image_cap">
             <img style="height: 60vh; width: 100vw" src="{{url_for('static', filename=trip['image'])}}" class="img-thumbnail" alt="...">
             <div class="overlay">
-              <h3 style="font-size:2em;">{{trip['title']}}</h3>
-              <h4 style="font-size:1.7em;">{{trip['district_name']}}</h4>
+              <h3 style="font-size:40px;"><strong>"{{trip['title']}}"</strong></h3>
+              <h4 style="font-size:25px;">{{trip['district_name']}}</h4>
             </div>
           </div>
         </div>
@@ -54,21 +54,19 @@
 </div>
 
 <br>
-<h1 id="regions" align="center">Регионы России</h1>
+<h1 id="regions" align="center"><strong>Регионы России</strong></h1>
 <br><br>
 <div style="text-align: center;">
-<a href="/districts/3"><button style="border-radius: 20px;font-size: 30px;width:150px;margin-right:20px;" type="button" class="btn btn-primary">Урал</button></a>
-<a href="/districts/1"><button style="border-radius: 20px;font-size: 30px;width:200px;margin-right:20px;" type="button" class="btn btn-warning">Дальний Восток</button></a>
-<a href="/districts/2"><button style="border-radius: 20px;font-size: 30px;width:150px;margin-right:20px;" type="button" class="btn btn-success">Сибирь</button></a>
-<a href="/districts/4"><button style="border-radius: 20px;font-size: 30px;width:200px;margin-right:20px;" type="button" class="btn btn-primary">Северо-Запад</button></a>
-<a href="/districts/5"><button style="border-radius: 20px;font-size: 30px;width:150px;margin-right:20px;" type="button" class="btn btn-info">Приволжье</button></a>
-<a href="/districts/6"><button style="border-radius: 20px;font-size: 30px;width:250px;margin-right:20px;" type="button" class="btn btn-danger">Центральная Россия</button></a>
-<a href="/districts/7"><button style="border-radius: 20px;font-size: 30px;width:150px;margin-right:20px;" type="button" class="btn btn-warning">Юг</button></a>
-<a href="/districts/8"><button style="border-radius: 20px;font-size: 30px;width:150px;" type="button" class="btn btn-primary">Кавказ</button></a>
+<a href="/districts/3"><button style="padding:5px 20px;border-radius: 20px;font-size: 30px;margin-right:20px;" type="button" class="btn btn-primary">Урал</button></a>
+<a href="/districts/1"><button style="padding:5px 20px;border-radius: 20px;font-size: 30px;margin-right:20px;" type="button" class="btn btn-warning">Дальний Восток</button></a>
+<a href="/districts/2"><button style="padding:5px 20px;border-radius: 20px;font-size: 30px;margin-right:20px;" type="button" class="btn btn-success">Сибирь</button></a>
+<a href="/districts/4"><button style="padding:5px 20px;border-radius: 20px;font-size: 30px;margin-right:20px;" type="button" class="btn btn-primary">Северо-Запад</button></a>
+<a href="/districts/5"><button style="padding:5px 20px;border-radius: 20px;font-size: 30px;margin-right:20px;" type="button" class="btn btn-info">Приволжье</button></a>
+<a href="/districts/6"><button style="padding:5px 20px;border-radius: 20px;font-size: 30px;margin-right:20px;" type="button" class="btn btn-danger">Центральная Россия</button></a>
+<a href="/districts/7"><button style="padding:5px 20px;border-radius: 20px;font-size: 30px;margin-right:20px;" type="button" class="btn btn-warning">Юг</button></a>
+<a href="/districts/8"><button style="padding:5px 20px;border-radius: 20px;font-size: 30px;" type="button" class="btn btn-primary">Кавказ</button></a>
 </div>
-
-<br><br>
-<h1 align="center">Выбрать на карте</h1>
+<br>
 <div class="map">
   <svg viewBox="0 0 1114 631">
     <g>
@@ -132,7 +130,7 @@
 </div>
 <br><br>
 <div id="news">
-  <h1 align="center">Новости о туризме в России</h1>
+  <h1 align="center"><strong>Новости о туризме в России</strong></h1>
   <div class=" d-flex justify-content-center align-items-center">
   <div class="list-group" style="width:1000px;">
     {% for new in news %}
