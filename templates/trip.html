@@ -18,18 +18,18 @@
 <div class="image_cap">
     <img class="img-fluid" src="{{url_for('static', filename=trip['image'])}}" style="height:60vh; width:100vw;">
     <div class="overlay">
-        <h1 style="font-size: 2em;">{{trip["title"]}}</h1>
-        <h2 style="font-size: 1.7em;">{{district["name"]}}</h2>
+        <h3 style="font-size:40px;"><strong>"{{trip['title']}}"</strong></h3>
+        <h2 style="font-size:25px;">{{district["name"]}}</h2>
     </div>
 </div>
 <br><br>
-<h2 align="center">Описание</h2>
+<h2 align="center"><strong>Описание</strong></h2>
 <div align="center" class="border" style="width:60%;font-size: 30px;">
     <p>{{trip["description"]}}</p>
 </div>
 
 <br><br>
-<h1 align="center">Маршрут</h1>
+<h1 align="center"><strong>Маршрут</strong></h1>
 <div class="container" style="display: block;">
 {% for des in descriptions %}
     {% if loop.index % 2 == 0 %}
@@ -38,22 +38,22 @@
             <div class="col-md-4">
               <img src="{{url_for('static', filename=des['image'])}}" class="img-fluid rounded-start" alt="...">
             </div>
-            <div class="col-md-8" style="position:relative;">
-                <div style="width:80%;position:absolute;left:50%;top:50%;transform: translate(-50%,-50%);justify:center;">
-                    <div class="card-body">
-                        <p style="font-size:24px;" class="card-text">{{des['description']}}</p>
-                    </div>
-                </div>
+            <div class="col-md-8" style="">
+              <div class="card-body" style="">
+                  <div style="font-size:24px;text-align:left;width:80%;margin-left:1%;" class="card-text">
+                      {{des['description']}}
+                  </div>
+              </div>
             </div>
           </div>
         </div>
     {% else %}
         <div class="card mb-3" style="margin: 0 auto;">
           <div class="row g-0">
-            <div class="col-md-8" style="position:relative;">
-              <div class="card-body">
-                  <div style="width:80%;position:absolute;left:50%;top:50%;transform: translate(-50%,-50%);justify:center;">
-                      <p style="font-size:24px;" class="card-text">{{des['description']}}</p>
+            <div class="col-md-8" style="">
+              <div class="card-body" style="">
+                  <div style="font-size:24px;text-align:right;width:80%;margin-left:20%;" class="card-text">
+                      {{des['description']}}
                   </div>
               </div>
             </div>
@@ -67,7 +67,7 @@
 {% endfor %}
 </div>
 <br>
-<h1 align="center">Маршрут на карте</h1>
+<h1 align="center"><strong>Маршрут на карте</strong></h1>
 
 <div align="center" style="">
 {% for settlement in trip['settlements'] %}
@@ -80,7 +80,7 @@
 {% if reviews %}
 <div style="margin-left:150px;margin-right:150px;" align="center">
     <div>
-        <span style="font-size:35px;margin-right:20px;">Отзывы</span>
+        <span style="font-size:35px;margin-right:20px;"><strong>Отзывы</strong></span>
         {% if current_user.is_authenticated %}
             <br>
             <a id="openReviewButton" onclick="openFormReview()"><button type="button" class="btn btn-outline-primary">Оставить свой отзыв</button></a>
@@ -172,5 +172,5 @@
     </script>
 </div>
 {% endif %}
-
+<br>
 {% endblock %}

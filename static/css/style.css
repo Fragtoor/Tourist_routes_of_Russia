@@ -1,7 +1,7 @@
 body{
     margin: 0;
     padding: 0;
-    font-family: "Netflix";
+    font-family: "Suisse";
 }
 
 html, body {
@@ -21,7 +21,15 @@ html, body {
 
 .overlay {
   position: absolute;
-  top: 10%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+}
+
+.overlay_district {
+  position: absolute;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   color: white;
@@ -68,7 +76,7 @@ svg {
 
 .border {
     margin: 0 auto;
-    border: 2px solid gray;
+    border: 10px solid gray;
     border-radius: 20px;
     padding: 20px;
 }
@@ -93,7 +101,10 @@ svg {
 
 @font-face {
   font-family: "Netflix";
-  src: url("../fonts/NetflixFont.ttf") format("truetype");
-  font-style: normal;
-  font-weight: normal;
+  src: url("../fonts/NetflixFont.ttf");
+}
+
+@font-face {
+  font-family: "Suisse";
+  src: url("../fonts/SuisseIntl-Regular.ttf");
 }
