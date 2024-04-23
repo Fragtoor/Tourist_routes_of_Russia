@@ -26,6 +26,7 @@ from scripts.validate_password import validate_on_password
 from forms.register_form import RegisterForm
 from forms.login_form import LoginForm
 
+from waitress import serve
 
 app = Flask(__name__)
 api = Api(app)
@@ -283,19 +284,4 @@ if __name__ == '__main__':
     api.add_resource(trip_resource.TripResource, '/api/trip/<int:trip_id>')
     api.add_resource(review_resource.ReviewResource, '/api/review/<int:review_id>')
     api.add_resource(trip_resource.TripsListResources, '/api/trips/<int:district_id>')
-    app.run(port=8080, host='127.0.0.1')
-
-
-# def send_confirmation_email(email):
-#     # Уникальный код
-#     confirmation_code = ''.join(random.choices([str(i) for i in range(10)], k=6))
-#     app_password = 'ngbm icyj phop jjlj'
-#     smtpserver = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-#     smtpserver.ehlo()
-#     smtpserver.login("alexandersivkov228@gmail.com", app_password)
-#     from_mail = "alexandersivkov228@gmail.com"
-#     text = f'Code: {confirmation_code}'
-#     smtpserver.sendmail(from_mail, email, text)
-#     smtpserver.close()
-#
-#     return confirmation_code
+    serve(app, host='127.0.0.1', port=8080)
