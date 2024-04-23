@@ -3,8 +3,25 @@
 
 <a href="/districts/{{district_id}}/trips/{{trip_id}}"><button style="width:150px;height:50px;position:absolute;top:10px;font-size:20px;left:10px;" type="button" class="btn btn-outline-secondary">← Назад</button></a>
 <br>
-<h1 align="center">Отзывы, о поездке <strong>{{trip_title}}</strong> в регионе <strong>{{district_name}}</strong></h1>
+<div style="display:flex;margin:0;justify-content: center;align-items: center;">
+    <h1 style="margin-right:20px" align="center">Отзывы, о поездке "<strong>{{trip_title}}</strong>" в регионе <strong>{{district_name}}</strong></h1>
+    <div class="dropdown" style="margin-right:20px">
+      <button class="btn btn-outline-primary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Сортировать по...
+      </button>
+      <form id="form_up_date" method="post" action="/districts/{{district_id}}/trips/{{trip_id}}/reviews?selectedValue=up_date"></form>
+      <form id="form_down_date" method="post" action="/districts/{{district_id}}/trips/{{trip_id}}/reviews?selectedValue=down_date"></form>
+      <form id="form_your_reviews" method="post" action="/districts/{{district_id}}/trips/{{trip_id}}/reviews?selectedValue=your_reviews"></form>
+      <form id="all" method="post" action="/districts/{{district_id}}/trips/{{trip_id}}/reviews?selectedValue=all"></form>
+      <ul class="dropdown-menu">
 
+        <li><a class="dropdown-item" onclick="document.getElementById('form_up_date').submit();">↑ Дате</a></li>
+        <li><a class="dropdown-item" onclick="document.getElementById('form_down_date').submit();">↓ Дате</a></li>
+        <li><a class="dropdown-item" onclick="document.getElementById('form_your_reviews').submit();">Ваши отзывы</a></li>
+        <li><a class="dropdown-item" onclick="document.getElementById('all').submit();">Все</a></li>
+      </ul>
+    </div>
+</div>
 <br>
 <div style="margin-left:150px;margin-right:150px;" align="center">
     <div class="row row-cols-1 row-cols-md-3 g-4">

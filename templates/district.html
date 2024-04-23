@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
 {% if current_user.is_authenticated %}
-    <div style="position:absolute;top:10px;right:50px;">
-        <img width="50px" src="{{url_for('static', filename='img/login/icon_user.jpg')}}">
-        <span style="font-size:25px;margin-right:20px;">{{ current_user.name + ' ' + current_user.surname }}</span>
+    <div style="position:absolute;top:20px;right:1%">
+        <img width="35px" src="{{url_for('static', filename='img/login/icon_user.jpg')}}">
+        <span style="font-size:20px;margin-right:20px;">{{ current_user.name + ' ' + current_user.surname }}</span>
         <a href="/logout"><button type="button" class="btn btn-outline-danger">Выйти</button></a>
     </div>
 {% else %}
-    <div style="position:absolute; top:20px;right:5%;" class="btn-group" role="group" aria-label="Basic example">
-        <a href="/login"><button style="font-size:20px;margin-right:15px;" type="button" class="btn btn-outline-success">Войти</button></a>
-        <a href="/register"><button style="font-size:20px;" type="button" class="btn btn-outline-secondary">Зарегистрироваться</button></a>
+    <div style="position:absolute;top:20px;right:1%" class="btn-group" role="group" aria-label="Basic example">
+        <a href="/login"><button style="margin-right:15px;font-size:1vw;" type="button" class="btn btn-outline-success">Войти</button></a>
+        <a href="/register"><button style="font-size:1vw;" type="button" class="btn btn-outline-secondary">Зарегистрироваться</button></a>
     </div>
 {% endif %}
 <a href="/"><button style="position:absolute;top:10px;font-size:20px;left:10px;" type="button" class="btn btn-outline-secondary">← На Главную</button></a>
@@ -21,29 +21,45 @@
     </div>
 </div>
 <br><br>
-<h1 style="" align="center"><strong>Популярные маршруты</strong></h1>
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary" style="background-color: white !important;">
+  <div class="container-fluid mx-auto" style="max-width: 50%;">
+    <h1 style="margin-right:15px;" align="center"><strong>Популярные маршруты</strong></h1>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <form class="d-flex" role="search" action="/districts/{{district.id}}" method="post">
+          <input class="form-control me-2" type="search" name="search_trip" placeholder="Найти маршрут" aria-label="Search">
+          <button class="btn btn-outline-primary" type="submit">Найти</button>
+      </form>
+    </div>
+  </div>
+</nav>
 <br>
 
-<div class="row row-cols-1 row-cols-md-2 g-4">
-{% for trip in trips %}
-    <div style="width:35%;margin-left:10%;">
-        <a href="/districts/{{district.id}}/trips/{{trip['id']}}" style="text-decoration: none;">
-        <div class="col">
-            <div class="card">
-              <img src="{{url_for('static', filename=trip['image'])}}" class="card-img-top" alt="...">
-              <div class="card-body">
-                {% if trip['fame'] == 'great' %}
-                  <h3 class="card-title"><strong>{{trip['title']}}</strong> <span style="font-size:20px;font-family:Times New Roman;" class="badge text-bg-success">Популярно</span></h3>
-                {% else %}
-                  <h2 class="card-title"><strong>{{trip['title']}}</strong></h2>
-                {% endif %}
-                <p style="display: -webkit-box;-webkit-line-clamp: 3;-webkit-box-orient: vertical;overflow: hidden;text-overflow: ellipsis;" class="card-text">{{trip['description']}}</p>
-              </div>
+{% if trips %}
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+    {% for trip in trips %}
+        <div style="width:35%;margin-left:10%;">
+            <a href="/districts/{{district.id}}/trips/{{trip['id']}}" style="text-decoration: none;">
+            <div class="col">
+                <div class="card">
+                  <img src="{{url_for('static', filename=trip['image'])}}" class="card-img-top" alt="...">
+                  <div class="card-body">
+                    {% if trip['fame'] == 'great' %}
+                      <h3 class="card-title"><strong>{{trip['title']}}</strong> <span style="font-size:15px;font-family:Times New Roman;" class="badge text-bg-success">Популярно</span></h3>
+                    {% else %}
+                      <h2 class="card-title"><strong>{{trip['title']}}</strong></h2>
+                    {% endif %}
+                    <p style="display: -webkit-box;-webkit-line-clamp: 3;-webkit-box-orient: vertical;overflow: hidden;text-overflow: ellipsis;" class="card-text">{{trip['description']}}</p>
+                  </div>
+                </div>
             </div>
+            </a>
         </div>
-        </a>
+    {% endfor %}
     </div>
-{% endfor %}
-</div>
+{% else %}
+<br>
+<h1 align="center">Маршрутов с названием <strong>{{search_trip}}</strong> не нашлось</h1>
+{% endif %}
 <br><br>
 {% endblock %}
