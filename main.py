@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 from requests import get, delete
 
-from flask import Flask, request, session, url_for
+from flask import Flask, request, session
 from flask import render_template, redirect
 
 from flask_login import LoginManager, login_required, logout_user, current_user, login_user
@@ -121,25 +121,25 @@ def trips(district_id, trip_id):
         return render_template('trip.html', **params)
     elif request.method == 'POST':
         session = db_session.create_session()
-        dataGet = request.get_json(force=True)
+        data_get = request.get_json(force=True)
 
-        date = datetime.datetime.strptime(dataGet['date'], '%Y-%m-%d %H:%M:%S')
+        date = datetime.datetime.strptime(data_get['date'], '%Y-%m-%d %H:%M:%S')
 
         review = Reviews(
-            title=dataGet['title'],
-            text=dataGet['text'],
+            title=data_get['title'],
+            text=data_get['text'],
             trip_id=trip_id,
             user_id=current_user.id,
             date=date,
-            like=dataGet['button']
+            like=data_get['button']
         )
 
         session.add(review)
         session.commit()
         return redirect(f'/districts/{district_id}/trips/{trip_id}')
     elif request.method == 'DELETE':
-        dataGet = request.get_json(force=True)
-        delete(f'http://localhost:8080/api/review/{dataGet["id"]}')
+        data_get = request.get_json(force=True)
+        delete(f'http://localhost:8080/api/review/{data_get["id"]}')
         return redirect('/')
 
 

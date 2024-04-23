@@ -16,8 +16,8 @@ class ReviewResource(Resource):
         abort_if_review_not_found(review_id)
         session = db_session.create_session()
         review = session.query(Reviews).get(review_id)
-        return jsonify({'review':
-                            review.to_dict(only=('id', 'text', 'title', 'date', 'like', 'trip_id', 'user_id'))})
+        return jsonify(
+            {'review': review.to_dict(only=('id', 'text', 'title', 'date', 'like', 'trip_id', 'user_id'))})
 
     def delete(self, review_id):
         abort_if_review_not_found(review_id)

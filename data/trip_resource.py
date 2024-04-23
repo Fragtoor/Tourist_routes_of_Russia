@@ -18,8 +18,9 @@ class TripResource(Resource):
         abort_if_trip_not_found(trip_id)
         session = db_session.create_session()
         trip = session.query(Trip).get(trip_id)
-        return jsonify({'trip':
-                            trip.to_dict(only=('id', 'title', 'district', 'description', 'settlements', 'image', 'des_settlements', 'route'))})
+        return jsonify(
+            {'trip': trip.to_dict(
+                only=('id', 'title', 'district', 'description', 'settlements', 'image', 'des_settlements', 'route'))})
 
     def delete(self, trip_id):
         abort_if_trip_not_found(trip_id)
