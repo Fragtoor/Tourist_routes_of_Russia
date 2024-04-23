@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
     <div class="container" style="height: 100vh;flex-direction:column;">
-    <h1 align="center"><strong>{{message}}</strong></h1>
-    <a href="/"><button style="width:150px;height:50px;font-size:20px;" type="button" class="btn btn-outline-secondary">На Главную</button></a>
+        <img src="{{url_for('static', filename='img/error_image.png')}}" width="650">
+        <h1 align="center"><strong>{{message}}</strong></h1>
+        <a href="/"><button style="width:150px;height:50px;font-size:20px;" type="button" class="btn btn-outline-secondary">На Главную</button></a>
     </div>
 {% endblock %}

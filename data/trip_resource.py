@@ -1,5 +1,6 @@
 from . import db_session
 from .trip import Trip
+from.district import District
 from flask_restful import abort, Resource, reqparse
 from flask import jsonify
 from .trip_pars import parser
@@ -30,19 +31,22 @@ class TripResource(Resource):
 
 
 class TripsListResources(Resource):
-    def get(self):
+    def get(self, district_id):
         session = db_session.create_session()
-        trips = session.query(Trip).all()
+        trips = session.query(Trip).join(District).filter(district_id == Trip.district)
         return jsonify({'trips': [item.to_dict(
-            only=('id', 'title', 'district', 'image')) for item in trips]})
+            only=('id', 'title', 'district', 'description', 'image', 'fame')) for item in trips]})
 
     def post(self):
-        print('ok')
         args = parser.parse_args()
         session = db_session.create_session()
         trip = Trip(
             title=args['title'],
             district=args['district'],
+            settlements=args['settlements'],
+            des_settlements=args['des_settlements'],
+            route=args['route'],
+            fame=args['fame'],
             description=args['description'],
             image=args['image']
         )

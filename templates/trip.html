@@ -1,19 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
+
 {% if current_user.is_authenticated %}
-    <div style="position:absolute;top:10px;right:50px;">
-        <img width="50px" src="{{url_for('static', filename='img/login/icon_user.jpg')}}">
-        <span style="font-size:25px;margin-right:20px;">{{ current_user.name + ' ' + current_user.surname }}</span>
+    <div style="position:absolute;top:20px;right:1%">
+        <img width="35px" src="{{url_for('static', filename='img/login/icon_user.jpg')}}">
+        <span style="font-size:20px;margin-right:20px;">{{ current_user.name + ' ' + current_user.surname }}</span>
         <a href="/logout"><button type="button" class="btn btn-outline-danger">Выйти</button></a>
     </div>
 {% else %}
-    <div style="position:absolute; top:20px;right:5%;" class="btn-group" role="group" aria-label="Basic example">
-        <a href="/login"><button style="font-size:20px;margin-right:15px;" type="button" class="btn btn-outline-success">Войти</button></a>
-        <a href="/register"><button style="font-size:20px;" type="button" class="btn btn-outline-secondary">Зарегистрироваться</button></a>
+    <div style="position:absolute;top:20px;right:1%" class="btn-group" role="group" aria-label="Basic example">
+        <a href="/login"><button style="margin-right:15px;font-size:1vw;" type="button" class="btn btn-outline-success">Войти</button></a>
+        <a href="/register"><button style="font-size:1vw;" type="button" class="btn btn-outline-secondary">Зарегистрироваться</button></a>
     </div>
 {% endif %}
 
-<a href="/districts/{{district['id']}}"><button style="width:150px;height:50px;position:absolute;top:10px;font-size:20px;left:10px;" type="button" class="btn btn-outline-secondary">← Назад</button></a>
+<a href="/districts/{{district.id}}"><button style="width:150px;height:50px;position:absolute;top:10px;font-size:20px;left:10px;" type="button" class="btn btn-outline-secondary">← Назад</button></a>
 <br>
 <div class="image_cap">
     <img class="img-fluid" src="{{url_for('static', filename=trip['image'])}}" style="height:60vh; width:100vw;">
@@ -84,57 +85,50 @@
         {% if current_user.is_authenticated %}
             <br>
             <a id="openReviewButton" onclick="openFormReview()"><button type="button" class="btn btn-outline-primary">Оставить свой отзыв</button></a>
-            <form>
-                <div id="formContainer" class="border" style="display:none;width:30%">
-                    <a id="closeReviewButton" onclick="closeFormReview()"><button style="float: left;margin-right: 10px;" type="button" class="btn btn-outline-danger">Закрыть</button></a>
-                    <br><br>
-
-                    <div class="form-floating">
-                        <input class="form-control" id="floatingTitle" placeholder="Напишите краткое название своего отзыва" required>
-                        <label class="form-label" for="floatingTitle">Краткое название</label>
-                        <div class="invalid-feedback">
-                            Заполните поле
-                        </div>
+            <form id="formContainer" style="display:none;width:30%">
+                <div class="border">
+                <a id="closeReviewButton" onclick="closeFormReview()"><button style="float: left;margin-right: 10px;" type="button" class="btn btn-outline-danger">Закрыть</button></a>
+                <br><br>
+                <div class="form-floating">
+                    <input type="text" maxlength="40" class="form-control" id="floatingTitle" placeholder="Напишите краткое название своего отзыва" required>
+                    <label class="form-label" for="floatingTitle">Краткое название</label>
+                    <div class="invalid-feedback">
+                        Заполните поле
                     </div>
-                    <br>
-                    <div class="mb-3">
-                        <textarea placeholder="Напишите отзыв" class="form-control" id="exampleFormControlTextarea1" rows="3" required></textarea>
+                </div>
+                <br>
+                <div class="mb-3">
+                    <label for="validationTextarea" class="form-label">Отзыв</label>
+                    <textarea maxlength="400" placeholder="Напишите отзыв (до 400 символов)" class="form-control" id="validationTextarea" rows="3" required></textarea>
+                    <div class="invalid-feedback">
+                      Заполните поле
                     </div>
 
-                    <input type="radio" class="btn-check" name="options" id="excellentButton" autocomplete="off" checked>
-                    <label class="btn btn-success" for="excellentButton">Отлично</label>
+                </div>
 
-                    <input type="radio" class="btn-check" name="options" id="goodButton" autocomplete="off">
-                    <label class="btn btn-warning" for="goodButton">Хорошо</label>
+                <input type="radio" class="btn-check" name="options" id="excellentButton" autocomplete="off" checked>
+                <label class="btn btn-success" for="excellentButton">Отлично</label>
 
-                    <input type="radio" class="btn-check" name="options" id="badButton" autocomplete="off">
-                    <label class="btn btn-danger" for="badButton">Плохо</label>
+                <input type="radio" class="btn-check" name="options" id="goodButton" autocomplete="off">
+                <label class="btn btn-warning" for="goodButton">Хорошо</label>
 
-                    <br><br>
-                    <a><button onclick="submitReview({{district.id}}, {{trip['id']}})" id="submitReviewButton" type="submit" class="btn btn-outline-primary">Оставить отзыв</button></a>
+                <input type="radio" class="btn-check" name="options" id="badButton" autocomplete="off">
+                <label class="btn btn-danger" for="badButton">Плохо</label>
+
+                <br><br>
+                <button onclick="submitReview({{district.id}}, {{trip['id']}})" id="submitReviewButton" type="submit" class="btn btn-outline-primary">Оставить отзыв</button>
                 </div>
             </form>
-            <br>
+            <br><br>
         {% endif %}
     </div>
-    <div class="row row-cols-1 row-cols-md-3 g-4">
+    <div class="row row-cols-1 row-cols-md-3 g-4" style="position:relative;">
         {% for review in reviews[:9] %}
-        <div class="col">
-            <div class="card">
-                <h5 class="card-header">{{review['title']}}</h5>
-              <div class="card-body">
-                  {% if current_user.id == review['user_id'] %}
-                        <h5 style="color:red;" class="card-title">
-                            {{review['user_name']}}
-                            {% if review['like'] == 'bad' %}
-                                <span class="badge text-bg-danger">Не рекомендует</span>
-                            {% elif review['like'] == 'good' %}
-                                <span class="badge text-bg-warning">Неплохо</span>
-                            {% else %}
-                                <span class="badge text-bg-success">Рекомендует</span>
-                            {% endif %}
-                        </h5>
-                  {% else %}
+        <div class="reviews">
+            <div class="col">
+                <div class="card">
+                    <h5 class="card-header">{{review['title']}}</h5>
+                  <div class="card-body">
                     <h5 class="card-title">
                             {{review['user_name']}}
                             {% if review['like'] == 'bad' %}
@@ -144,17 +138,33 @@
                             {% else %}
                                 <span class="badge text-bg-success">Рекомендует</span>
                             {% endif %}
-                        </h5>
-                  {% endif %}
-                <p class="card-text">{{review['text']}}</p>
-              </div>
-              <div class="card-footer text-body-secondary">
-                  {{review['date']}}
-              </div>
+                    </h5>
+                    <p class="card-text">{{review['text']}}</p>
+                  </div>
+                  <div class="card-footer text-body-secondary">
+                      {{review['date']}}
+                  </div>
+                </div>
             </div>
+            {% if current_user.id == review['user_id'] %}
+                <div class="btn-group" role="group" aria-label="Basic mixed styles example" style="width:100%">
+                    <button id="deleteReviewButton" onclick="deleteReview({{review['id']}})" type="button" class="btn btn-outline-danger">Удалить</button>
+                </div>
+                <br>
+            {% endif %}
         </div>
         {% endfor%}
+        <div id="submit_delete_review" class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="position:absolute;display:none;left:50%;top:50%;transform:translate(-50%,-50%);background-color:white;">
+          <div class="toast-body">
+            Вы точно хотите удалить этот отзыв?
+            <div class="mt-2 pt-2 border-top">
+                <a href="/districts/{{district['id']}}/trips/{{trip['id']}}"><button onclick="deleteReviewAction({{district['id']}}, {{trip['id']}})" type="button" class="btn btn-outline-primary btn-sm">Да</button></a>
+                <button onclick="notDeleteReview()" type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="toast">Нет</button>
+            </div>
+          </div>
+        </div>
     </div>
+
     <br>
     {% if reviews|length > 9 %}
     <a href="/districts/{{district['id']}}/trips/{{trip['id']}}/reviews"><button type="button" class="btn btn-outline-primary">Читать ещё</button></a>
@@ -172,5 +182,4 @@
     </script>
 </div>
 {% endif %}
-<br>
 {% endblock %}

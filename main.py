@@ -1,17 +1,16 @@
 import datetime
 import os
 from dotenv import load_dotenv
-from requests import get
+from requests import get, delete
 
-from flask import Flask, request
+from flask import Flask, request, session, url_for
 from flask import render_template, redirect
 
 from flask_login import LoginManager, login_required, logout_user, current_user, login_user
 
 from flask_restful import Api
-from sqlalchemy import case
 
-from data import db_session, trip_resource
+from data import db_session, trip_resource, review_resource
 from data.reviews import Reviews
 from data.trip import Trip
 from data.district import District
@@ -21,6 +20,8 @@ from data.des_settlements import DesSettlements
 import sqlalchemy
 
 from scripts.parser_news import get_news
+from scripts.get_reviews import get_reviews
+from scripts.validate_password import validate_on_password
 
 from forms.register_form import RegisterForm
 from forms.login_form import LoginForm
@@ -54,56 +55,51 @@ def main():
         dict_trips.append(dict_trip)
 
     news = get_news(count=6)
-
     params = {
         'title': 'Туристические маршруты по России',
         'recom_trips': dict_trips,
-        'news': news
+        'news': news,
     }
     return render_template('index.html', **params)
 
 
-@app.route('/districts/<int:district_id>')
+@app.route('/districts/<int:district_id>', methods=['GET', 'POST'])
 def districts(district_id):
-    session = db_session.create_session()
-    district = session.query(District).filter(District.id == district_id).first()
-    id_trips = session.execute(
-        sqlalchemy.select(District.trips).select_from(District).filter(District.id == district_id)
-    ).first()[0].split(', ')
-
-    list_trips = []
-    for id_trip in id_trips:
-        trip = session.execute(
-            sqlalchemy.select(
-                Trip.id, Trip.title, Trip.description, District.id, Trip.image, Trip.fame
-            ).select_from(Trip).join(District, District.id == Trip.district).filter(Trip.id == id_trip)
-        ).first()
-        data_trips = {
-            'id': trip[0],
-            'title': trip[1],
-            'description': trip[2],
-            'district_id': trip[3],
-            'image': trip[4],
-            'fame': trip[5]
+    if request.method == 'GET':
+        session = db_session.create_session()
+        district = session.query(District).filter(District.id == district_id).first()
+        list_trips = get(f'http://localhost:8080/api/trips/{district_id}').json()['trips']
+        params = {
+            'title': district.name,
+            'district': district,
+            'trips': list_trips,
         }
-        list_trips.append(data_trips)
-    params = {
-        'title': district.name,
-        'district': district,
-        'trips': list_trips
-    }
 
-    return render_template('district.html', **params)
+        return render_template('district.html', **params)
+    elif request.method == 'POST':
+        search_trip = request.form.get('search_trip')
+        session = db_session.create_session()
+        list_trips = session.query(Trip).filter(Trip.title.like(f'%{search_trip.strip()}%')).all()
+        district = session.query(District).filter(District.id == district_id).first()
+        params = {
+            'title': district.name,
+            'district': district,
+            'trips': list_trips,
+            'search_trip': search_trip
+        }
+
+        return render_template('district.html', **params)
 
 
-@app.route('/districts/<int:district_id>/trips/<int:trip_id>', methods=['GET', 'POST'])
+@app.route('/districts/<int:district_id>/trips/<int:trip_id>', methods=['GET', 'POST', 'DELETE'])
 def trips(district_id, trip_id):
     if request.method == 'GET':
         session = db_session.create_session()
         trip = get(f'http://localhost:8080/api/trip/{trip_id}').json()['trip']
         trip['settlements'] = trip['settlements'].split(', ')
+        trip['des_settlements'] = trip['des_settlements'].split(', ')
         descriptions = []
-        for ind_des in trip['des_settlements'].split(', '):
+        for ind_des in trip['des_settlements']:
             description = session.execute(
                 sqlalchemy.select(
                     DesSettlements.description, DesSettlements.image
@@ -111,59 +107,18 @@ def trips(district_id, trip_id):
             ).first()
             descriptions.append(description)
 
-        district = session.execute(
-            sqlalchemy.select(District.id, District.name).select_from(District).filter(District.id == district_id)
-        ).first()
-        reviews_list = session.execute(
-            sqlalchemy.select(
-                Reviews.text, Reviews.title, Reviews.like, Reviews.date, Users.name, Users.surname, Users.id
-            ).select_from(Reviews).join(Users, Reviews.user_id == Users.id).filter(Reviews.trip_id == Trip.id).order_by(
-                Reviews.date
-            )
-        ).all()
-        dict_reviews = []
-        for review in reviews_list[::-1]:
-            delta = datetime.datetime.now() - review[3]
-            days = delta.days
-
-            if days <= 30:
-                if days == 0:
-                    date = 'Сегодня'
-                elif days % 10 == 1:
-                    date = f'{days} день назад'
-                elif days % 10 < 5:
-                    date = f'{days} дня назад'
-                else:
-                    date = f'{days} дней назад'
-            elif days < 365:
-                months = days // 30
-                if months == 1:
-                    date = '1 месяц назад'
-                elif months < 5:
-                    date = f'{months} месяца назад'
-                else:
-                    date = f'{months} месяцев назад'
-            else:
-                date = 'Более года назад'
-            data = {
-                'text': review[0],
-                'title': review[1],
-                'user_name': review[4] + ' ' + review[5],
-                'user_id': review[6],
-                'date': date,
-                'like': review[2]
-            }
-            dict_reviews.append(data)
+        district = session.query(District).get(district_id)
+        reviews_list = get_reviews(trip_id)
 
         params = {
             'district': district,
             'title': trip['title'],
             'trip': trip,
-            'reviews': dict_reviews,
-            'descriptions': descriptions
+            'reviews': reviews_list,
+            'descriptions': descriptions,
         }
         return render_template('trip.html', **params)
-    else:
+    elif request.method == 'POST':
         session = db_session.create_session()
         dataGet = request.get_json(force=True)
 
@@ -181,63 +136,52 @@ def trips(district_id, trip_id):
         session.add(review)
         session.commit()
         return redirect(f'/districts/{district_id}/trips/{trip_id}')
+    elif request.method == 'DELETE':
+        dataGet = request.get_json(force=True)
+        delete(f'http://localhost:8080/api/review/{dataGet["id"]}')
+        return redirect('/')
 
 
-@app.route('/districts/<int:district_id>/trips/<int:trip_id>/reviews/')
+@app.route('/districts/<int:district_id>/trips/<int:trip_id>/reviews/', methods=['GET', 'POST'])
 def reviews(district_id, trip_id):
-    session = db_session.create_session()
-    district_name = session.query(District.name).filter(District.id == district_id).first()[0]
-    trip_title = session.query(Trip.title).filter(Trip.id == trip_id).first()[0]
-    reviews_list = session.execute(
-        sqlalchemy.select(
-            Reviews.text, Reviews.title, Reviews.like, Reviews.date, Users.name, Users.surname, Users.id
-        ).select_from(Reviews).join(Users, Reviews.user_id == Users.id).filter(Reviews.trip_id == Trip.id).order_by(
-            Reviews.date
-        )
-    ).all()
-    dict_reviews = []
-    for review in reviews_list[::-1]:
-        delta = datetime.datetime.now() - review[3]
-        days = delta.days
+    if request.method == 'GET':
+        session = db_session.create_session()
+        district_name = session.query(District.name).filter(District.id == district_id).first()[0]
+        trip_title = session.query(Trip.title).filter(Trip.id == trip_id).first()[0]
+        reviews_list = get_reviews(trip_id)
 
-        if days <= 30:
-            if days == 0:
-                date = 'Сегодня'
-            elif days % 10 == 1:
-                date = f'{days} день назад'
-            elif days % 10 < 5:
-                date = f'{days} дня назад'
-            else:
-                date = f'{days} дней назад'
-        elif days < 365:
-            months = days // 30
-            if months == 1:
-                date = '1 месяц назад'
-            elif months < 5:
-                date = f'{months} месяца назад'
-            else:
-                date = f'{months} месяцев назад'
-        else:
-            date = 'Более года назад'
-        data = {
-            'text': review[0],
-            'title': review[1],
-            'user_name': review[4] + ' ' + review[5],
-            'user_id': review[6],
-            'date': date,
-            'like': review[2]
+        params = {
+            'district_id': district_id,
+            'trip_id': trip_id,
+            'title': 'Отзывы, ' + trip_title + ', ' + district_name,
+            'district_name': district_name,
+            'trip_title': trip_title,
+            'reviews': reviews_list,
         }
-        dict_reviews.append(data)
+        return render_template('reviews.html', **params)
+    elif request.method == 'POST':
+        selected_value = request.args.get('selectedValue')
+        session = db_session.create_session()
+        district_name = session.query(District.name).filter(District.id == district_id).first()[0]
+        trip_title = session.query(Trip.title).filter(Trip.id == trip_id).first()[0]
+        if selected_value == 'up_date':
+            reviews_list = get_reviews(trip_id, 'up_date')
+        elif selected_value == 'down_date':
+            reviews_list = get_reviews(trip_id, 'down_date')
+        elif selected_value == 'your_reviews':
+            reviews_list = get_reviews(trip_id, 'your_reviews', current_user)
+        else:
+            reviews_list = get_reviews(trip_id)
 
-    params = {
-        'district_id': district_id,
-        'trip_id': trip_id,
-        'title': 'Отзывы, ' + trip_title + ', ' + district_name,
-        'district_name': district_name,
-        'trip_title': trip_title,
-        'reviews': dict_reviews
-    }
-    return render_template('reviews.html', **params)
+        params = {
+            'district_id': district_id,
+            'trip_id': trip_id,
+            'title': 'Отзывы, ' + trip_title + ', ' + district_name,
+            'district_name': district_name,
+            'trip_title': trip_title,
+            'reviews': reviews_list,
+        }
+        return render_template('reviews.html', **params)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -248,7 +192,12 @@ def login():
         user = db_sess.query(Users).filter(Users.email == form.email.data).first()
         if user and user.check_password(form.password.data):
             login_user(user)
-            return redirect("/")
+            # Перенаправление на предыдущую страницу
+            if 'previous_url' in session:
+                previous_url = session['previous_url']
+                session.pop('previous_url', None)
+                return redirect(previous_url)
+            return redirect('/')
         return render_template('login.html',
                                message="Неправильный логин или пароль",
                                form=form)
@@ -268,6 +217,13 @@ def reqister():
             return render_template('register.html', title='Регистрация',
                                    form=form,
                                    message="Такой пользователь уже есть")
+
+        validate = validate_on_password(form.password.data)
+        if validate['message'] != 'OK':
+            return render_template('register.html', title='Регистрация',
+                                   form=form,
+                                   message=validate['message'])
+
         session = db_session.create_session()
         user = Users(
             name=form.name.data,
@@ -283,6 +239,12 @@ def reqister():
     return render_template('register.html', title='Регистрация', form=form)
 
 
+@app.before_request
+def before_request():
+    if request.endpoint not in ('login', 'logout', 'static', 'register'):
+        session['previous_url'] = request.path
+
+
 @login_manager.user_loader
 def load_user(user_id):
     db_sess = db_session.create_session()
@@ -293,7 +255,12 @@ def load_user(user_id):
 @login_required
 def logout():
     logout_user()
-    return redirect("/")
+    # Перенаправление на предыдущую страницу
+    if 'previous_url' in session:
+        previous_url = session['previous_url']
+        session.pop('previous_url', None)
+        return redirect(previous_url)
+    return redirect('/')
 
 
 @app.errorhandler(400)
@@ -314,20 +281,10 @@ def bad_request(_):
 if __name__ == '__main__':
     db_session.global_init('db/journey.db')
     api.add_resource(trip_resource.TripResource, '/api/trip/<int:trip_id>')
-    api.add_resource(trip_resource.TripsListResources, '/api/trips')
+    api.add_resource(review_resource.ReviewResource, '/api/review/<int:review_id>')
+    api.add_resource(trip_resource.TripsListResources, '/api/trips/<int:district_id>')
     app.run(port=8080, host='127.0.0.1')
 
-
-# DISTRICTS = {
-#     'siberia': 'Сибирь',
-#     'far_east': 'Дальний Восток',
-#     'urals': 'Урал',
-#     'volga_region': 'Приволжье',
-#     'northwest': 'Северо-Запад',
-#     'center': 'Центральная Россия',
-#     'caucasus': 'Кавказ',
-#     'south': 'Юг'
-# }
 
 # def send_confirmation_email(email):
 #     # Уникальный код

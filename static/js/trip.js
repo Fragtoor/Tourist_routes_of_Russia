@@ -13,7 +13,6 @@ document.getElementById('excellentButton').onclick = function() {
 }
 
 function submitReview(district_id, trip_id) {
-
     var xml = new XMLHttpRequest();
     xml.open('POST', '/districts/' + district_id + '/trips/' + trip_id, true);
     xml.setRequestHeader("Content-type","application/x-www-form-urlencoded");
@@ -26,13 +25,17 @@ function submitReview(district_id, trip_id) {
 
     // Форматируем дату и время в формат, подходящий для SQLAlchemy DateTime
     const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
-    dataSend = JSON.stringify({
-        'title': document.getElementById("floatingTitle").value,
-        'text': document.getElementById("exampleFormControlTextarea1").value,
-        'button': current_button,
-        'date': formattedDate
-    });
-    xml.send(dataSend);
-    document.getElementById("formContainer").style.display = "none";
-    document.getElementById("openReviewButton").style.display = "block";
+    if (document.getElementById("validationTextarea").value.length > 0) {
+        if (document.getElementById("floatingTitle").value.length > 0) {
+            dataSend = JSON.stringify({
+                'title': document.getElementById("floatingTitle").value,
+                'text': document.getElementById("validationTextarea").value,
+                'button': current_button,
+                'date': formattedDate
+            });
+            xml.send(dataSend);
+            document.getElementById("formContainer").style.display = "none";
+            document.getElementById("openReviewButton").style.display = "block";
+        }
+    }
 }
