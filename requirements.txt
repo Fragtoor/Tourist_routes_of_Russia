@@ -35,4 +35,3 @@ urllib3==2.2.1
 Werkzeug==3.0.1
 WTForms==3.1.2
 yarl==1.9.4
-waitress
