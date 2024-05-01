@@ -284,4 +284,4 @@ if __name__ == '__main__':
     api.add_resource(trip_resource.TripResource, '/api/trip/<int:trip_id>')
     api.add_resource(review_resource.ReviewResource, '/api/review/<int:review_id>')
     api.add_resource(trip_resource.TripsListResources, '/api/trips/<int:district_id>')
-    serve(app, host='127.0.0.1', port=8080)
+    serve(app, host='0.0.0.0')
