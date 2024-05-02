@@ -2,6 +2,7 @@ import datetime
 import os
 from dotenv import load_dotenv
 from requests import get, delete
+import logging
 
 from flask import Flask, request, session
 from flask import render_template, redirect
@@ -35,6 +36,12 @@ app.config['SECRET_KEY'] = SECRET_KEY
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+
+logging.basicConfig(
+    filename='example.log',
+    format='%(asctime)s %(levelname)s %(name)s %(message)s'
+)
 
 
 @app.route('/')
