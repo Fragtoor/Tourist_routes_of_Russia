@@ -38,10 +38,10 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 
-logging.basicConfig(
-    filename='example.log',
-    format='%(asctime)s %(levelname)s %(name)s %(message)s'
-)
+# logging.basicConfig(
+#     filename='example.log',
+#     format='%(asctime)s %(levelname)s %(name)s %(message)s'
+# )
 
 
 @app.route('/')
