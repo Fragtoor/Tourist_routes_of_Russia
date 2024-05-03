@@ -289,4 +289,4 @@ if __name__ == '__main__':
     api.add_resource(trip_resource.TripResource, '/api/trip/<int:trip_id>')
     api.add_resource(review_resource.ReviewResource, '/api/review/<int:review_id>')
     api.add_resource(trip_resource.TripsListResources, '/api/trips/<int:district_id>')
-    app.run("0.0.0.0")
+    app.run("0.0.0.0", port=8080)
