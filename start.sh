@@ -10,7 +10,7 @@ export PYTHONUNBUFFERED=true
 VIRTUALENV=./venv
 
 if [ ! -d $VIRTUALENV ]; then
-  python3 -m venv $VIRTUALENV
+  python -m venv $VIRTUALENV
 fi
 
 # Install pip into virtual environment
@@ -22,4 +22,4 @@ fi
 $VIRTUALENV/bin/pip install -r requirements.txt
 
 # Run your glorious application
-$VIRTUALENV/bin/python3 main.py
+$VIRTUALENV/bin/python main.py
