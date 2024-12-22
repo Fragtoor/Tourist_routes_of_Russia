@@ -9,6 +9,12 @@ html, body {
     height: 100%;
 }
 
+
+.index_text {
+    -webkit-text-stroke: 0.5px black; /* для Safari/Chrome */
+    text-stroke: 0.5px black; /* для других браузеров */
+    color: white; /* указание цвета текста */
+}
 .image_cap {
     position: relative;
     text-align: center;

@@ -30,10 +30,6 @@ from forms.login_form import LoginForm
 app = Flask(__name__)
 api = Api(app)
 
-load_dotenv()
-SECRET_KEY = os.getenv('SECRET_KEY')
-app.config['SECRET_KEY'] = SECRET_KEY
-
 login_manager = LoginManager()
 login_manager.init_app(app)
 
@@ -289,4 +285,9 @@ if __name__ == '__main__':
     api.add_resource(trip_resource.TripResource, '/api/trip/<int:trip_id>')
     api.add_resource(review_resource.ReviewResource, '/api/review/<int:review_id>')
     api.add_resource(trip_resource.TripsListResources, '/api/trips/<int:district_id>')
-    app.run("0.0.0.0")
+
+    load_dotenv()
+    SECRET_KEY = os.getenv('SECRET_KEY')
+    app.secret_key = SECRET_KEY
+    app.config['SESSION_TYPE'] = 'memcache'
+    app.run("0.0.0.0", port=8080)

@@ -137,7 +137,7 @@
   <div class=" d-flex justify-content-center align-items-center">
   <div class="list-group" style="width:1000px;">
     {% for new in news %}
-      <a href="{{new['url']}}" class="list-group-item list-group-item-action">
+      <a href="{{new['url']}}" class="list-group-item list-group-item-action" title="Узнать подробнее">
         <div class="d-flex w-100 justify-content-between">
           <h5 style="font-size:25px;" class="mb-1">{{new['text']}}</h5>
           <small style="font-size:15px;" class="text-body-secondary">{{new['time']}}</small>
