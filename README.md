@@ -3,3 +3,4 @@
 - главный исполняемый файл - main.py
 - pip install -r requirements.txt - установить все заимствования
 - создать .env с секретным ключом SECRET_KEY
+Ссылка на сайт: https://tourist-routes-of-russia-wr77.onrender.com/
